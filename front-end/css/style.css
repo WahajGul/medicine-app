@@ -98,10 +98,17 @@ nav ul li a:hover::before {
 
 }
 
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .welcome {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 100%;
 }
 
 .welcome h1 {
@@ -175,4 +182,33 @@ form input {
     border: 1ps solid grey;
     padding: 0rem 1rem;
     margin: 10px;
+}
+
+.dashboard {
+    border: 2px solid black;
+    padding: 1vh 1vw;
+    border-radius: 12px;
+    box-shadow: 5px 5px 1rem black;
+    margin: 2vh 2vw;
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    flex-direction: column;
+}
+
+.dashboardItem {
+    padding: 1vh 1vw;
+    border-radius: 8px;
+    margin: 1vh 1vw;
+    border: 1px solid black;
+    text-align: center;
+    width: max-content;
+    background-color: #002b5b;
+    color: white;
+}
+
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    width: 100%;
 }

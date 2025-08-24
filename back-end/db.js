@@ -14,7 +14,7 @@ let db = new sqlite3.Database("./database/medicineApp.db");
 
 const showAll = () => {
 	return new Promise((resolve, reject) => {
-		db.all("select * from test", (err, rows) => {
+		db.all("select * from medicines", (err, rows) => {
 			if (err) {
 				console.error("error : ", err.message);
 				reject(err);
