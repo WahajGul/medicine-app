@@ -6,12 +6,12 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.get("/test", async (req, res) => {
+app.get("/medicines", async (req, res) => {
 	const data = await showAll();
 	res.status(201).json(data);
 });
 
-app.post("/test", async (req, res) => {
+app.post("/medicines", async (req, res) => {
 	const user = req.body;
 	const data = await insertRow(user);
 	res.status(201).json(data);

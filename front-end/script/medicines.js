@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function addMedicines(el) {
-	fetch("http://localhost:3000/test")
+	fetch("http://localhost:3000/medicines")
 		.then((j) => j.json())
 		.then((med) => {
 			console.log(med);
@@ -23,4 +23,39 @@ function addMedicines(el) {
 				)
 				.join("");
 		});
+}
+
+function debounce(func, delay) {
+	let timeout;
+	return function (...args) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			func.apply(this, args);
+		}, delay);
+	};
+}
+
+function searchMeds(query, el) {
+	if (query == "") {
+		fetch("http://localhost:3000/medicines")
+			.then((j) => j.json())
+			.then((med) => {
+				console.log(med);
+				el.innerHTML = med
+					.map(
+						(i) =>
+							`<tr>
+                <td>${i.m_id}</td>
+                <td>${i.m_name}</td>
+                <td>${i.m_rate}</td>
+                <td>${i.m_comp_name}</td>
+                <td>${i.m_discount}</td>
+                <td>${i.m_qty}Pcs</td>
+                </tr>`,
+					)
+					.join("");
+			});
+	} else if (query) {
+		fetch("http://localhost:3000/test");
+	}
 }
