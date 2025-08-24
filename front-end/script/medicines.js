@@ -18,7 +18,7 @@ function addMedicines(el) {
                 <td>${i.m_rate}</td>
                 <td>${i.m_comp_name}</td>
                 <td>${i.m_discount}</td>
-                <td>${i.m_inStock}</td>
+                <td>${i.m_qty}Pcs</td>
                 </tr>`,
 				)
 				.join("");
