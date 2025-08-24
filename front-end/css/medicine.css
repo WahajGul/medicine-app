@@ -46,3 +46,13 @@
     text-align: center;
     border: 1px solid white;
 }
+
+.itemContainer tr:nth-child(even) {
+    color: white;
+    background-color: #00b4d8;
+}
+
+.itemContainer tr:nth-child(odd) {
+    color: white;
+    background-color: #002b5b;
+}
