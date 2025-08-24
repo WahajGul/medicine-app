@@ -1,18 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const tbody = document.querySelector("tbody");
+	fetch("http://localhost:3000/medicines")
+		.then((meds) => meds.json())
+		.then((data) => {
+			addMedicines(tbody, data);
+		});
 
-	addMedicines(tbody);
+	document.querySelector("#searchMedicine").addEventListener("input", (e) => {
+		e.preventDefault();
+		console.log(e.target.value);
+		debouncedSearchMeds(e.target.value, tbody);
+	});
 });
 
-function addMedicines(el) {
-	fetch("http://localhost:3000/medicines")
-		.then((j) => j.json())
-		.then((med) => {
-			console.log(med);
-			el.innerHTML = med
-				.map(
-					(i) =>
-						`<tr>
+function addMedicines(el, medicinesRows) {
+	el.innerHTML = medicinesRows
+		.map(
+			(i) =>
+				`<tr>
                 <td>${i.m_id}</td>
                 <td>${i.m_name}</td>
                 <td>${i.m_rate}</td>
@@ -20,9 +25,8 @@ function addMedicines(el) {
                 <td>${i.m_discount}</td>
                 <td>${i.m_qty}Pcs</td>
                 </tr>`,
-				)
-				.join("");
-		});
+		)
+		.join("");
 }
 
 function debounce(func, delay) {
@@ -36,26 +40,11 @@ function debounce(func, delay) {
 }
 
 function searchMeds(query, el) {
-	if (query == "") {
-		fetch("http://localhost:3000/medicines")
-			.then((j) => j.json())
-			.then((med) => {
-				console.log(med);
-				el.innerHTML = med
-					.map(
-						(i) =>
-							`<tr>
-                <td>${i.m_id}</td>
-                <td>${i.m_name}</td>
-                <td>${i.m_rate}</td>
-                <td>${i.m_comp_name}</td>
-                <td>${i.m_discount}</td>
-                <td>${i.m_qty}Pcs</td>
-                </tr>`,
-					)
-					.join("");
-			});
-	} else if (query) {
-		fetch("http://localhost:3000/test");
-	}
+	fetch(`http://localhost:3000/medicines?value=${query}`)
+		.then((j) => j.json())
+		.then((k) => {
+			addMedicines(el, k);
+		});
 }
+
+let debouncedSearchMeds = debounce(searchMeds, 500);

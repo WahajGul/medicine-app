@@ -1,14 +1,15 @@
 import express from "express";
 import cors from "cors";
-import { showAll, insertRow } from "./db.js";
+import { showAllMeds, searchMeds } from "./db.js";
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 app.get("/medicines", async (req, res) => {
-	const data = await showAll();
-	res.status(201).json(data);
+	const { value } = req.query;
+	const data = await searchMeds(value);
+	res.status(200).json(data);
 });
 
 app.post("/medicines", async (req, res) => {
