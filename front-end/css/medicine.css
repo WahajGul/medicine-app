@@ -33,18 +33,17 @@
 }
 
 .itemContainer table {
-    background-color: #00b4d8;
     font-size: 1.2rem;
     margin: 3rem;
     width: 100%;
-    border: 1px solid white;
+    border: 1px solid black;
 }
 
 .itemContainer th {
-    background-color: #00b4d8;
+    background-color: black;
     padding: 5px;
     text-align: center;
-    border: 1px solid white;
+    border: 1px solid black;
 }
 
 .itemContainer tr:nth-child(even) {
