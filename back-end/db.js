@@ -17,6 +17,7 @@ const showAllMeds = () => {
 		});
 	});
 };
+
 const searchMeds = (query) => {
 	if (!query) {
 		console.log("from if", query);
