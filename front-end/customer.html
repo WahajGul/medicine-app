@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="css/customer.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -29,29 +31,32 @@
                 Customers
             </h1>
         </div>
-    <main>
-        <section id="customer-section">
-            <h2>Customer List</h2>
-            <div class="customer-actions">
+
+        <div class="style-container">
+            <div class="inputContainer style-input-container">
                 <input type="text" id="search-customer" placeholder="Search by name or ID...">
                 <button id="add-customer-btn">Add Customer</button>
             </div>
-            <table id="customer-table">
-                <thead>
-                    <tr>
-                        <th>Customer ID</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Customer rows will be added by JS -->
-                </tbody>
-            </table>
-        </section>
+            <div class="itemContainer style-item-container">
+                <table id="customer-table">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    <tbody>
+
+                    </tbody>
+                    </thead>
+
+                </table>
+
+            </div>
+        </div>
         <dialog id="customer-dialog">
             <form id="customer-form">
                 <h3>Add/Edit Customer</h3>
@@ -66,4 +71,5 @@
     </main>
     <script src="script.js"></script>
 </body>
+
 </html>
