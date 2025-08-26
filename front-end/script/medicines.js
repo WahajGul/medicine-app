@@ -11,8 +11,25 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(e.target.value);
 		debouncedSearchMeds(e.target.value, tbody);
 	});
+
+	console.log(document.querySelectorAll("#deleteMedicine"));
+	if (document.querySelectorAll("#deleteMedicine")) {
+		Array.from(document.querySelectorAll("#deleteMedicine")).map((btn) => {
+			btn.addEventListener("click", function () {
+				console.log("HELLO");
+			});
+		});
+	}
 });
 
+async function deleteMedicineRow(id) {
+	if (confirm("Do you want to Delete")) {
+		fetch(`http://localhost:3000/medicines/${id}`, {
+			method: "DELETE",
+		});
+		renderMedRows();
+	}
+}
 function addMedicines(el, medicinesRows) {
 	el.innerHTML = medicinesRows
 		.map(
@@ -24,9 +41,19 @@ function addMedicines(el, medicinesRows) {
                 <td>${i.m_comp_name}</td>
                 <td>${i.m_discount}</td>
                 <td>${i.m_qty}Pcs</td>
+                <td>
+            <button data-id=${i.m_id} id="editMedicine" >Edit</button>
+            <button data-id=${i.m_id} class="del-med" id="deleteMedicine" >Delete</button>
+            
+            </td>
                 </tr>`,
 		)
 		.join("");
+	Array.from(document.querySelectorAll("#deleteMedicine")).map((btn) => {
+		btn.onclick = function () {
+			deleteMedicineRow(btn.dataset.id);
+		};
+	});
 }
 
 function debounce(func, delay) {
@@ -47,4 +74,12 @@ function searchMeds(query, el) {
 		});
 }
 
+function renderMedRows() {
+	const tbody = document.querySelector("tbody");
+	fetch("http://localhost:3000/medicines")
+		.then((meds) => meds.json())
+		.then((data) => {
+			addMedicines(tbody, data);
+		});
+}
 let debouncedSearchMeds = debounce(searchMeds, 500);

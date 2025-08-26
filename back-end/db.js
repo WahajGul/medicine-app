@@ -20,8 +20,6 @@ const showAllMeds = () => {
 
 const searchMeds = (query) => {
 	if (!query) {
-		console.log("from if", query);
-
 		return showAllMeds();
 	}
 	return new Promise((resolve, reject) => {
@@ -40,4 +38,23 @@ const searchMeds = (query) => {
 		);
 	});
 };
-export { showAllMeds, searchMeds };
+
+const deleteCustomer = (id) => {
+	console.log(id);
+	if (!id) {
+		return;
+	}
+	return new Promise((resolve, reject) => {
+		db.all("delete from medicines where m_id=?", [id], (err, rows) => {
+			if (err) {
+				console.log(err.message, "djk");
+				reject(err);
+			} else {
+				console.log(rows);
+				resolve(rows);
+			}
+		});
+	});
+};
+
+export { showAllMeds, searchMeds, deleteCustomer };
