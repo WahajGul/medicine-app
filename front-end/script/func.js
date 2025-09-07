@@ -16,6 +16,21 @@ function deleteRow(id, table, query) {
 	}
 }
 
+function insertRow(table, data) {
+	if (!table || !data) {
+		console.error("invslid");
+
+		return;
+	}
+	fetch(`http://localhost:3000/${table}`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(data),
+	});
+}
+
 function debounce(func, delay) {
 	let timeout;
 	return function (...args) {
@@ -26,4 +41,4 @@ function debounce(func, delay) {
 	};
 }
 
-export { getRows, debounce, deleteRow };
+export { getRows, debounce, deleteRow, insertRow };

@@ -39,7 +39,7 @@ const searchMeds = (query) => {
 	});
 };
 
-const deleteCustomer = (id) => {
+const deleteMedicine = (id) => {
 	console.log(id);
 	if (!id) {
 		return;
@@ -57,4 +57,23 @@ const deleteCustomer = (id) => {
 	});
 };
 
-export { showAllMeds, searchMeds, deleteCustomer };
+const insertMedicine = (m_name, m_rate, m_comp_name, m_discount, m_qty) => {
+	if (!m_name || !m_rate || !m_comp_name || !m_discount || !m_qty) {
+		return Promise.reject(new Error("All fields are required"));
+	}
+	return new Promise((resolve, reject) => {
+		db.run(
+			"insert into medicines (m_name,m_rate,m_comp_name,m_discount,m_qty) values (?,?,?,?,?)",
+			[m_name, m_rate, m_comp_name, m_discount, m_qty],
+			(err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows);
+				}
+			},
+		);
+	});
+};
+
+export { showAllMeds, searchMeds, deleteMedicine, insertMedicine };
