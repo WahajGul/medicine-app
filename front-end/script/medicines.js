@@ -1,35 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { getRows, debounce, deleteRow } from "./func.js";
+
+document.addEventListener("DOMContentLoaded", async () => {
 	const tbody = document.querySelector("tbody");
-	fetch("http://localhost:3000/medicines")
-		.then((meds) => meds.json())
-		.then((data) => {
-			addMedicines(tbody, data);
-		});
+	const medSearchBar = document.querySelector("#searchMedicine");
 
-	document.querySelector("#searchMedicine").addEventListener("input", (e) => {
+	//render rows on page load
+
+	addMedicines(tbody, await getRows("medicines", medSearchBar.value));
+
+	// when user types in search bar display rows based on that value
+
+	medSearchBar.oninput = function (e) {
 		e.preventDefault();
-		console.log(e.target.value);
 		debouncedSearchMeds(e.target.value, tbody);
-	});
+	};
 
-	console.log(document.querySelectorAll("#deleteMedicine"));
 	if (document.querySelectorAll("#deleteMedicine")) {
 		Array.from(document.querySelectorAll("#deleteMedicine")).map((btn) => {
 			btn.addEventListener("click", function () {
-				console.log("HELLO");
+				deleteRow(btn.dataset.id, "medicines", medSearchBar.value);
 			});
 		});
 	}
 });
 
-async function deleteMedicineRow(id) {
-	if (confirm("Do you want to Delete")) {
-		fetch(`http://localhost:3000/medicines/${id}`, {
-			method: "DELETE",
-		});
-		renderMedRows();
-	}
-}
 function addMedicines(el, medicinesRows) {
 	el.innerHTML = medicinesRows
 		.map(
@@ -49,37 +43,10 @@ function addMedicines(el, medicinesRows) {
                 </tr>`,
 		)
 		.join("");
-	Array.from(document.querySelectorAll("#deleteMedicine")).map((btn) => {
-		btn.onclick = function () {
-			deleteMedicineRow(btn.dataset.id);
-		};
-	});
 }
 
-function debounce(func, delay) {
-	let timeout;
-	return function (...args) {
-		clearTimeout(timeout);
-		timeout = setTimeout(() => {
-			func.apply(this, args);
-		}, delay);
-	};
+async function searchMeds(query, el) {
+	addMedicines(el, await getRows("medicines", query));
 }
 
-function searchMeds(query, el) {
-	fetch(`http://localhost:3000/medicines?value=${query}`)
-		.then((j) => j.json())
-		.then((k) => {
-			addMedicines(el, k);
-		});
-}
-
-function renderMedRows() {
-	const tbody = document.querySelector("tbody");
-	fetch("http://localhost:3000/medicines")
-		.then((meds) => meds.json())
-		.then((data) => {
-			addMedicines(tbody, data);
-		});
-}
 let debouncedSearchMeds = debounce(searchMeds, 500);
