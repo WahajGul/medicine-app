@@ -76,4 +76,36 @@ const insertMedicine = (m_name, m_rate, m_comp_name, m_discount, m_qty) => {
 	});
 };
 
-export { showAllMeds, searchMeds, deleteMedicine, insertMedicine };
+const updateMedicine = (
+	m_id,
+	m_name,
+	m_rate,
+	m_comp_name,
+	m_discount,
+	m_qty,
+) => {
+	if (!m_id || !m_name || !m_rate || !m_comp_name || !m_discount || !m_qty) {
+		return Promise.reject(new Error("All fields are required"));
+	}
+	return new Promise((resolve, reject) => {
+		db.run(
+			"update medicines set m_name=? , m_rate=? , m_comp_name = ? , m_discount = ? , m_qty = ? where m_id=?",
+			[m_name, m_rate, m_comp_name, m_discount, m_qty, m_id],
+			(err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows);
+				}
+			},
+		);
+	});
+};
+
+export {
+	showAllMeds,
+	searchMeds,
+	deleteMedicine,
+	insertMedicine,
+	updateMedicine,
+};

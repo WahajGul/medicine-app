@@ -18,7 +18,7 @@ function deleteRow(id, table, query) {
 
 function insertRow(table, data) {
 	if (!table || !data) {
-		console.error("invslid");
+		console.error("invalid");
 
 		return;
 	}
@@ -31,6 +31,23 @@ function insertRow(table, data) {
 	});
 }
 
+// replcaes td with input tags and uses td.textContent as input.value
+function rowEdit(tr) {
+	let tds = Array.from(tr.children);
+	// console.log(tds.shift());
+	const idCell = tds.shift();
+	const actionCell = tds.pop();
+	tds = tds.map((e) => {
+		return `<input  value="${e.textContent}" />`;
+	});
+	tds = [
+		idCell.outerHTML,
+		...tds.map((td) => `<td>${td}</td>`),
+		`<td><button id="saveMedicine" data-id="${idCell.textContent}">Save</button></td>`,
+	];
+	tr.innerHTML = tds.join("");
+}
+
 function debounce(func, delay) {
 	let timeout;
 	return function (...args) {
@@ -41,4 +58,4 @@ function debounce(func, delay) {
 	};
 }
 
-export { getRows, debounce, deleteRow, insertRow };
+export { getRows, debounce, deleteRow, insertRow, rowEdit };

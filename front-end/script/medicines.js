@@ -1,71 +1,83 @@
-import { getRows, debounce, deleteRow, insertRow } from "./func.js";
+import { getRows, debounce, deleteRow, insertRow, rowEdit } from "./func.js";
 
-document.addEventListener("DOMContentLoaded", async () => {
-	const tbody = document.querySelector("tbody");
-	const medSearchBar = document.querySelector("#searchMedicine");
-	const medicineDialog = document.querySelector("#medicineDialog");
-	const addMedicineBtn = document.querySelector("#addMedicineBtn");
-	const m_nameInput = document.querySelector("#m_name");
-	const m_rateInput = document.querySelector("#m_rate");
-	const m_comp_nameInput = document.querySelector("#m_comp_name");
-	const m_discountInput = document.querySelector("#m_discount");
-	const m_qtyInput = document.querySelector("#m_qty");
+// variable declaration
 
-	//render rows on page load
+const tbody = document.querySelector("tbody");
+const medSearchBar = document.querySelector("#searchMedicine");
+const medicineDialog = document.querySelector("#addMedicineDialog");
+const addMedicineBtn = document.querySelector("#addMedicineBtn");
+const m_nameInput = document.querySelector("#m_name");
+const m_rateInput = document.querySelector("#m_rate");
+const m_comp_nameInput = document.querySelector("#m_comp_name");
+const m_discountInput = document.querySelector("#m_discount");
+const m_qtyInput = document.querySelector("#m_qty");
 
-	addMedicines(tbody, await getRows("medicines", medSearchBar.value));
+//render rows on page load
+addMedicines(tbody, await getRows("medicines", medSearchBar.value));
 
-	// when user types in search bar display rows based on that value
+// when user types in search bar display rows based on that value
+medSearchBar.oninput = function (e) {
+	e.preventDefault();
+	debouncedSearchMeds(e.target.value, tbody);
+};
 
-	medSearchBar.oninput = function (e) {
-		e.preventDefault();
-		debouncedSearchMeds(e.target.value, tbody);
-	};
-
-	if (document.querySelectorAll("#deleteMedicine")) {
-		Array.from(document.querySelectorAll("#deleteMedicine")).map((btn) => {
-			btn.addEventListener("click", function () {
-				deleteRow(btn.dataset.id, "medicines", medSearchBar.value);
-			});
+// as soon as add medicine function load rows select all the buttons with #deleteMedicine
+// map over them and bind the deleteRow function to them on click handler
+if (document.querySelectorAll("#deleteMedicine")) {
+	Array.from(document.querySelectorAll("#deleteMedicine")).map((btn) => {
+		btn.addEventListener("click", function () {
+			deleteRow(btn.dataset.id, "medicines", medSearchBar.value);
 		});
-	}
+	});
+}
 
-	addMedicineBtn.onclick = () => {
-		medicineDialog.showModal();
-	};
+if (document.querySelectorAll("#editMedicine")) {
+	Array.from(document.querySelectorAll("#editMedicine")).map((btn) => {
+		btn.addEventListener("click", function (e) {
+			rowEdit(e.currentTarget.closest("tr"));
+		});
+	});
+}
 
-	document.querySelector("#medicineForm").onsubmit = async (e) => {
-		e.preventDefault();
-		if (
-			!m_nameInput.value ||
-			!m_rateInput.value ||
-			!m_comp_nameInput.value ||
-			!m_discountInput.value ||
-			!m_qtyInput.value
-		) {
-			alert("empty or invalid input field");
-			return;
-		}
-		const data = {
-			m_name: m_nameInput.value,
-			m_rate: parseFloat(m_rateInput.value),
-			m_comp_name: m_comp_nameInput.value,
-			m_discount: parseFloat(m_discountInput.value),
-			m_qty: m_qtyInput.value,
+// add button next to search bar
+addMedicineBtn.onclick = () => {
+	medicineDialog.showModal();
+
+	if (document.querySelector("#addMedicineForm")) {
+		document.querySelector("#addMedicineForm").onsubmit = async (e) => {
+			console.log("hello");
+			e.preventDefault();
+			if (
+				!m_nameInput.value ||
+				!m_rateInput.value ||
+				!m_comp_nameInput.value ||
+				!m_discountInput.value ||
+				!m_qtyInput.value
+			) {
+				alert("empty or invalid input field");
+				return;
+			}
+			const data = {
+				m_name: m_nameInput.value,
+				m_rate: parseFloat(m_rateInput.value),
+				m_comp_name: m_comp_nameInput.value,
+				m_discount: parseFloat(m_discountInput.value),
+				m_qty: m_qtyInput.value,
+			};
+			insertRow("medicines", data);
+
+			m_nameInput.value = "";
+			m_rateInput.value = "";
+			m_comp_nameInput.value = "";
+			m_discountInput.value = "";
+			m_qtyInput.value = "";
+
+			addMedicines(tbody, await getRows("medicines", medSearchBar.value));
+
+			medicineDialog.close();
 		};
-		insertRow("medicines", data);
-
-		m_nameInput.value = "";
-		m_rateInput.value = "";
-		m_comp_nameInput.value = "";
-		m_discountInput.value = "";
-		m_qtyInput.value = "";
-
-		addMedicines(tbody, await getRows("medicines", medSearchBar.value));
-
-		medicineDialog.close();
-	};
-});
+	}
+};
 
 function addMedicines(el, medicinesRows) {
 	el.innerHTML = medicinesRows
@@ -94,7 +106,7 @@ async function searchMeds(query, el) {
 
 let debouncedSearchMeds = debounce(searchMeds, 500);
 
-document.querySelector("#medicineDialog").onclick = (e) => {
+document.querySelector("dialog").onclick = (e) => {
 	const rect = document
 		.querySelector("#medicineDialog")
 		.getBoundingClientRect();

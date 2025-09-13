@@ -5,6 +5,7 @@ import {
 	searchMeds,
 	deleteMedicine,
 	insertMedicine,
+	updateMedicine,
 } from "./db.js";
 const app = express();
 const port = 3000;
@@ -34,6 +35,20 @@ app.post("/medicines", async (req, res) => {
 app.delete("/medicines/:id", async (req, res) => {
 	const { id } = req.params;
 	const data = deleteMedicine(id);
+	res.status(200).json(data);
+});
+
+app.put("/medicines/:id", async (req, res) => {
+	const { id } = req.params;
+	const { m_name, m_rate, m_comp_name, m_discount, m_qty } = req.body;
+	const data = await updateMedicine(
+		id,
+		m_name,
+		m_rate,
+		m_comp_name,
+		m_discount,
+		m_qty,
+	);
 	res.status(200).json(data);
 });
 
