@@ -102,10 +102,121 @@ const updateMedicine = (
 	});
 };
 
+// ============== Customers ================================
+
+const showAllCustomers = () => {
+	return new Promise((resolve, reject) => {
+		db.all("select * from customers", [], (err, rows) => {
+			if (err) {
+				console.error("error : ", err.message);
+				reject(err);
+			} else {
+				// console.log(rows);
+				resolve(rows);
+			}
+		});
+	});
+};
+
+const searchCustomers = (query) => {
+	if (!query) {
+		return showAllCustomers();
+	}
+	return new Promise((resolve, reject) => {
+		db.all(
+			"select * from customers where customer_id LIKE ? OR first_name LIKE ? OR last_name LIKE ?",
+			[`%${query}%`, `%${query}%`, `%${query}%`],
+			(err, rows) => {
+				if (err) {
+					console.error(err);
+					reject(err);
+				} else {
+					// console.log(rows);
+					resolve(rows);
+				}
+			},
+		);
+	});
+};
+
+const deleteCustomer = (id) => {
+	console.log(id);
+	if (!id) {
+		return;
+	}
+	return new Promise((resolve, reject) => {
+		db.all("delete from medicines where customer_id=?", [id], (err, rows) => {
+			if (err) {
+				console.log(err.message, "djk");
+				reject(err);
+			} else {
+				console.log(rows);
+				resolve(rows);
+			}
+		});
+	});
+};
+
+const insertCustomer = (first_name, last_name, phone, email, address) => {
+	if (!first_name || !last_name || !phone || !email || !address) {
+		return Promise.reject(new Error("All fields are required"));
+	}
+	return new Promise((resolve, reject) => {
+		db.run(
+			"insert into customers (first_name, last_name, phone, email, address) values (?,?,?,?,?)",
+			[first_name, last_name, phone, email, address],
+			(err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows);
+				}
+			},
+		);
+	});
+};
+
+const updateCustomer = (
+	customer_id,
+	first_name,
+	last_name,
+	phone,
+	email,
+	address,
+) => {
+	if (
+		!customer_id ||
+		!first_name ||
+		!last_name ||
+		!phone ||
+		!email ||
+		!address
+	) {
+		return Promise.reject(new Error("All fields are required"));
+	}
+	return new Promise((resolve, reject) => {
+		db.run(
+			"update customers set first_name=? , last_name=? ,  phone= ? , email = ? , address = ? where customer_id=?",
+			[first_name, last_name, phone, email, address, customer_id],
+			(err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows);
+				}
+			},
+		);
+	});
+};
+
 export {
 	showAllMeds,
 	searchMeds,
 	deleteMedicine,
 	insertMedicine,
 	updateMedicine,
+	searchCustomers,
+	deleteCustomer,
+	insertCustomer,
+	updateCustomer,
 };

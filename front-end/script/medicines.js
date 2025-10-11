@@ -39,6 +39,13 @@ if (document.querySelectorAll("#editMedicine")) {
 	});
 }
 
+if (document.querySelectorAll("#saveMedicine")) {
+	// Array.from(document.querySelectorAll("#editMedicine")).map((btn) => {
+	// 	btn.disabled = true;
+	// });
+	Array.from(document.querySelectorAll("#saveMedicine")).map((btn) => {});
+}
+
 // add button next to search bar
 addMedicineBtn.onclick = () => {
 	medicineDialog.showModal();
